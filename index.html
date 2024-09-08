@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>To Do List</title>
+</head>
+<body>
+    <section id="toDoApp">
+        <header>To Do List</header>
+        <div class="add">   
+            <form id="addform" action="" method="dialog">
+                <input type="text" name="addtext" maxlength="20" placeholder="ADD To List" class="intext" V-model="Dotext">
+                <input type="submit" value="ADD" class="inbutton" @click.prevent="addEl"  :disabled="Dotext ? false : true" >
+            </form>
+        </div>
+        <div class="list">
+            <div class="item" v-for="(item,index) in DoList">
+                <p>{{ item }}</p>
+                <div>
+                    <a><img src="./img/remove.png" alt="" @click="deleteItem(index)"></a>
+                    <a><img src="./img/done.png" alt="" @click="Done(index)"></a>
+                </div>
+            </div>
+        </div>
+        <div class="clear-all">
+            <button @click="DeleteAll()" id="clear-all" :disabled="DoList.length < 2 ? true : false"> Clear Items</button>
+        </div>
+    </section>
+
+
+    <!-- complet window alert -->
+    <div id="window-alert">
+        <div>
+            <img src="./img/completing.gif" alt="">
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="vue.js"></script>
+    <script>
+        fetch("/GetData")
+        .then((result) => 
+        {
+            const allData = result.json()
+            return allData
+        })
+        .then((allData) => {
+            console.log(allData.length)
+            let content = document.querySelector(".list");
+            let add = document.getElementById("addform");
+            let textadd = document.querySelector("[name='addtext']");
+
+            for(let i = 0 ; i < allData.length;i++){
+                let addDiv = document.createElement('div');
+
+                addDiv.className = "item";
+                let addP = document.createElement('p');
+                let divCh = document.createElement('div');
+
+                let Adone = document.createElement('a');
+                let Adelet = document.createElement('a');
+                let selcetion = document.createElement('select');
+                let option = document.createElement('option');
+                let image1 = document.createElement('img')
+                let image2 = document.createElement('img')
+                Adelet.className = 'delet';
+                Adone.className = 'done';
+                content.appendChild(addDiv);
+                addDiv.appendChild(addP);
+                addDiv.appendChild(divCh);
+                addP.innerText = allData[i].item;
+                addP.style.fontSize = "120%"
+                divCh.appendChild(Adelet);
+                divCh.appendChild(Adone);
+
+                Adone.appendChild(image1);
+                image1.src = './img/done.png'
+                Adelet.appendChild(image2)
+                image2.src = './img/remove.png';
+            }
+            let delet = document.querySelectorAll('.delet')
+            for(let i=0; i<delet.length; i++){
+                delet[i].onclick = function(){
+                    if (confirm("Are you sure ??") == true){
+                        this.parentNode.parentNode.remove();
+                    }
+                }
+            }
+
+            let done = document.querySelectorAll(".done")
+            let windowAlert = document.querySelector("#window-alert")
+            for (let j= 0;j<done.length;j++){
+                done[j].onclick = function(){
+                    this.parentNode.parentNode.remove();
+                    windowAlert.style.display = "block"
+                    setInterval(() => {
+                        windowAlert.style.display = "none";
+                    }, 2000);
+                    
+                }
+            }
+        })
+        .catch(data => console.log(data))
+    
+        var vue = new Vue({
+            el:'#toDoApp',
+            data:{
+                Dotext:'',
+                DoList:[],
+            },
+            methods:{
+                addEl: function(){
+                    this.DoList.push(this.Dotext)
+                    fetch("/",{
+                        method: 'post',
+                        headers : {
+                            "Content-Type" : "application/json"
+                        },
+                        body: JSON.stringify({itemName: this.Dotext}),
+                    })
+                    .then((response) => response.json())
+                    .catch(data => console.log(data))
+                    this.Dotext = ''
+                },
+                loadData: function(){
+                    fetch("/GetData")
+                    .then((result) => 
+                    {
+                        const allData = result.json()
+                        return allData
+                    })
+                    .then((allData) => {
+                        console.log(allData)
+                        return allData
+                    })
+                    .catch(data => console.log(data))
+                },
+                DeleteAll:function (){
+                    if (confirm('Are you sure ? ')){
+                        this.DoList = []
+                    }
+                },
+                deleteItem:function(index){
+                    if (confirm('Are you sure that you want delete this item  ? ')){
+                        this.DoList.splice(index,1)
+                    }
+                },
+                Done:function(index){
+                    this.DoList.splice(index,1)
+                    document.querySelector('#window-alert').style.display = " block"
+                    setInterval(() => {
+                        document.querySelector('#window-alert').style.display = "none"
+                    }, 2000);  
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+body{ 
+    background-color: darkgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+body header{
+    text-align: center;
+    font-size: 40px;
+    padding: 1% 0px;
+}
+section{
+    align-items: center;
+    width: 50%;
+}
+.add{
+    width: 100%;
+    height: auto;
+}
+.intext{
+    width: 87%;
+    height: 30px;
+    padding-left: 2%;
+    
+}
+.inbutton{
+    width: 10%;
+    margin-left: -5px;
+    height: 33px;
+}
+.list{
+    width: 100%;
+    height: auto;
+    margin-top: 5%;
+}
+.item{
+    width: 97%;
+    background-color: antiquewhite;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1% 1%;
+    margin: 2% 0%;
+}
+.clear-all{
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    margin-top: 4%;
+}
+.clear-all  button{
+    width: 20%;
+    height: 30px;
+    font-weight: 1000;
+    color: green;
+}
+.item div{
+    display: flex;
+}
+.item div a{
+    margin-right: 5%;
+}
+.item div a:hover{
+    cursor: pointer;
+}
+.item div a img{
+    width: 30px;
+}
+
+
+/* for complet */
+#window-alert{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 200%;
+    z-index: 1;
+    overflow: auto;
+    background-color: rgba(77, 77, 77, 0.533);
+}
+#window-alert div{
+    width: fit-content;
+    padding: 2%;
+    margin: auto;
+    margin-top: 55%;
+}
+#window-alert div img{
+    width: 100%;
+}
+
